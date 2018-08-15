@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 
 class SearchForm extends Component {
+  state = {
+    searchText: ''
+  };
   onSearchChange = e => {
     this.setState({ searchText: e.target.value });
   };
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.onSearch(this.query.value);
+    this.props.onSearch(this.state.searchText);
     e.currentTarget.reset();
   };
 
@@ -21,7 +24,6 @@ class SearchForm extends Component {
             onChange={this.onSearchChange}
             name="search"
             placeholder="Search A Movie ..."
-            ref={input => (this.query = input)}
           />
           <button
             type="submit"

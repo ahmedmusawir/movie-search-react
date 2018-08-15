@@ -8,26 +8,31 @@ class Movies extends Component {
   constructor() {
     super();
     this.state = {
-      movies: []
+      movies: [],
+      loading: true
     };
   }
-  componentDidMount() {}
+  componentDidMount() {
+    this.performSearch();
+  }
 
-  performSearch = query => {
+  performSearch = (query = 'redemption') => {
     axios
       .get(`http://www.omdbapi.com/?apikey=ea71a8f&s=${query}`)
       .then(response => {
-        // console.log(response.data.Search);
-        this.setState({ movies: response.data.Search });
+        console.log(response.data.Search.length);
+        this.setState({
+          movies: response.data.Search,
+          loading: false
+        });
       })
       .catch(error => {
         console.log('Error fetching and parsing data', error);
+        this.setState({ movies: [] });
       });
   };
 
   render() {
-    console.log(this.state.movies);
-
     return (
       <div className="container">
         <div className="main-header">
@@ -35,7 +40,11 @@ class Movies extends Component {
           <SearchForm onSearch={this.performSearch} />
         </div>
         <div className="main-content">
-          <MovieList data={this.state.movies} />
+          {this.state.loading ? (
+            <p>Loading ...</p>
+          ) : (
+            <MovieList data={this.state.movies} />
+          )}
         </div>
       </div>
     );
